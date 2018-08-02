@@ -190,14 +190,14 @@ def message(bot, update):
     global context 
     global final  
     global conversation 
-    conversation= ConversationV1(username='7e8a016b-2c28-4bdd-b6e8-2043febdf43e',  # TODO
-                                  password='Bi3ui0yvDAb0',  # TODO
+    conversation= ConversationV1(username='username',  # TODO
+                                  password='password',  # TODO
                                   version='2018-02-16')
                                   
 
     # get response from watson
     response = conversation.message(
-        workspace_id='154e610f-03b1-43e9-81c0-268b421b1c80',  # TODO
+        workspace_id='id',  # TODO
         input={'text': update.message.text},
         context=context)
     context = response['context']
@@ -448,7 +448,7 @@ def help(bot, update):
 #main function.    
 def main():
     # Create the Updater and pass it your bot's token.
-    updater = Updater('632265063:AAHIPPqksA5LONY1Jb3ufTykouEMPll1qC8')  # TODO
+    updater = Updater('telegram_api')  # TODO
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
