@@ -6,13 +6,19 @@ COFFEE BOT
 PREREQUISITS:
 
   ->Create a Telegram account.
+  
   ->Create an IBM-watson account.
+  
   ->Create a Telegram bot.
+  
     Steps to create a bot:
     https://tutorials.botsfloor.com/creating-a-bot-using-the-telegram-bot-api-5d3caed3266d
   ->Download python
+  
   ->Install python-telegram-bot package
+  
   ->Install watson-developer-cloud package
+  
   
 RUNNING THE TESTS:
 
