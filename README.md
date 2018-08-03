@@ -1,8 +1,10 @@
 COFFEE BOT
+
   The coffee bot is a coffee ordering machine.Orders are sent as messages through the telegram app,the bot processes these messages
   and replies with the total amount to be paid.
   
 PREREQUISITS:
+
   ->Create a Telegram account.
   ->Create an IBM-watson account.
   ->Create a Telegram bot.
@@ -13,5 +15,6 @@ PREREQUISITS:
   ->Install watson-developer-cloud package
   
 RUNNING THE TESTS:
+
   ->After all the prerequisits have been fulfilled send a message to your bot(which is your order).The bot processes the message and 
   replies accordingly.The final reply will be the total amount to be paid for the order placed.
