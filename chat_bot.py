@@ -33,6 +33,14 @@ finalord=[]
 currord=[]
 thisord=[]
 oldord=[]
+def send_tele_menu(response):
+
+    resp = ''
+    for text in response['output']['text']:
+        resp += text
+    resp=resp.replace("<br>","\n")
+    print(resp)
+    return resp
 #send watson generated reponse to telegram
 def send_tele(response):
 
@@ -68,7 +76,7 @@ def handle_missing(bot,update):
             context={'missing':'yes','types':ord[0]['types'],'number':ord[0]['number']}
             val1=ord[0]['types']
             del thisord[0]
-            val='Would you like to have',val1, 'it in regular,medium or large?'
+            val='Would you like to have',val1, 'in regular,medium or large?'
             text_resp=list_to_string(val)
             return text_resp
          
@@ -190,28 +198,32 @@ def message(bot, update):
     global context 
     global final  
     global conversation 
-    conversation= ConversationV1(username='username',  # TODO
-                                  password='password',  # TODO
+    conversation= ConversationV1(username='7e8a016b-2c28-4bdd-b6e8-2043febdf43e',  # TODO
+                                  password='Bi3ui0yvDAb0',  # TODO
                                   version='2018-02-16')
                                   
 
     # get response from watson
     response = conversation.message(
-        workspace_id='id',  # TODO
+        workspace_id='154e610f-03b1-43e9-81c0-268b421b1c80',  # TODO
         input={'text': update.message.text},
         context=context)
     context = response['context']
     order=response['entities']
+    #print(response)
     global finalord
     global thisord
     #when the recieved response is unknown. 
     if len(response['intents'])==0 and len(response['entities'])==0:
         resp2=send_tele(response)
         update.message.reply_text(resp2)
+    #elif len(response['intents'])==0:
+        #resp2=send_tele(response)
+        #update.message.reply_text(resp2)
     
     #if any one the three values are missing, it enters this condition.    
     if 'missing' in context and context['missing']=='yes':
-        if 'types' in context and 'size' in context:
+        if 'types' in context and 'size' in context:#when number missing
             currord=[{'types':context['types'],'size':context['size'],'number':order[0]['value']}]
             finalord.append(currord)
             val=handle_missing(bot,update)
@@ -280,12 +292,17 @@ def message(bot, update):
     elif len(order)==1 and order[0]['entity']=='types':
         val = handle_one(order)
         update.message.reply_text(val)
+    elif len(order)==1 and order[0]['entity']!='types':
+        update.message.reply_text("Please enter name of the coffee")
     elif len(order)>1:
         t=0
         for j in range(len(order)):
             if order[j]['entity']=='types':
                 t+=1
-        if t==len(order):
+        
+        if t==0:
+            update.message.reply_text("Please enter name of the coffee")
+        if t==len(order) and t!=0:
             val = handle_one(order)
             update.message.reply_text(val)
             
@@ -294,21 +311,23 @@ def message(bot, update):
             for j in range(len(order)):
                 if order[j]['entity']=='types':
                     t+=1
-
-            if (len(order)/t)%3==0:
+            
+            if t==0:
+            	update.message.reply_text("Please enter name of the coffee")
+            if (len(order)/t)%3==0 and t!=0:
                 handle_three(order)
                 update.message.reply_text("Would you like to continue ordering? yes or no")
                 context = {'anything': 'yes'}
-            elif (len(order)/t)%2==0:
+            elif (len(order)/t)%2==0 and t!=0:
                 val=handle_two(bot,update,order)
                 print(thisord)
                 update.message.reply_text(val)
                 
-        elif len(order)%3 ==0:
+        elif len(order)%3 ==0 and t!=0:
             handle_three(order)
             update.message.reply_text("Would you like to continue ordering? yes or no")
             context = {'anything': 'yes'}
-        elif len(order)%2==0:
+        elif len(order)%2==0 and t!=0:
             val=handle_two(bot,update,order)
             update.message.reply_text(val)
             
@@ -345,12 +364,12 @@ def message(bot, update):
             #generates the final reponse.
             i = 0
             final_reply = ''
-            reply = 'Your order is '
+            reply = 'Your order is \n'
             while i < len(final):
                 d = final[i].copy()
                 #print('d: ', d)
                 if 'types' in d and 'size' in d and 'number' in d:
-                    final_reply += d['number'] + ' ' + d['types'] + ' in ' + d['size'] + '. '
+                    final_reply += d['number'] + ' ' + d['types'] + ' in ' + d['size'] + '.\n '
                     i = i + 1
             final_reply = reply + final_reply + ' Correct?'
             print(final_reply)
@@ -365,7 +384,7 @@ def message(bot, update):
              
         elif response['intents'][0]['intent']=='get_menu':
             flag=1
-            resp2 = send_tele(response)
+            resp2 = send_tele_menu(response)
             update.message.reply_text(resp2)
         elif response['intents'][0]['intent']=='goodbye':
             flag=1
@@ -380,6 +399,7 @@ def message(bot, update):
             flag=1
             print("FINAL ORDER")
             print(final)
+        
             
             
 	    #inserting order
@@ -448,7 +468,7 @@ def help(bot, update):
 #main function.    
 def main():
     # Create the Updater and pass it your bot's token.
-    updater = Updater('telegram_api')  # TODO
+    updater = Updater('632265063:AAHIPPqksA5LONY1Jb3ufTykouEMPll1qC8')  # TODO
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
